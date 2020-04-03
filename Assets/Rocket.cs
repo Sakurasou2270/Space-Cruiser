@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
@@ -36,12 +34,16 @@ public class Rocket : MonoBehaviour
             case "Friendly":
                 print("Hit Friendly");
                 break;
-
             case "Fuel":
                 print("Hit Fuel");
                 break;
+            case "Finish":
+                print("Finished Level");
+                SceneManager.LoadScene(1);
+                break;
             default:
                 print("Died");
+                SceneManager.LoadScene(0);
                 break;
         }
     }
@@ -65,6 +67,7 @@ public class Rocket : MonoBehaviour
 
     private void Rotate()
     {
+        // Control It AKA Taking Away Physics
         rigidBody.freezeRotation = true;
 
         if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
@@ -76,5 +79,7 @@ public class Rocket : MonoBehaviour
         {
             transform.Rotate(-Vector3.forward * rotatingThrust * Time.deltaTime);
         }
+        // Stop Controlling It AKA Physics Re Applied
+        rigidBody.freezeRotation = false;
     }
 }
