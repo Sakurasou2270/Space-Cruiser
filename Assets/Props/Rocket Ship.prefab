@@ -398,7 +398,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8246159745024132433}
-  m_LocalRotation: {x: 0.046020385, y: 0.08655562, z: -0.37224543, w: 0.92294294}
+  m_LocalRotation: {x: 0.046018306, y: 0.08655014, z: -0.37224245, w: 0.9229447}
   m_LocalPosition: {x: 0, y: 4.861, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -408,7 +408,7 @@ Transform:
   - {fileID: 8246159744854290605}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.591001, y: 7.2920003, z: -43.382004}
 --- !u!82 &8246159745024132447
 AudioSource:
   m_ObjectHideFlags: 0
@@ -419,8 +419,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6ba728e7c396291409f2fb1122de53f1, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 0.75
   Loop: 1
@@ -535,3 +535,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainThrust: 1000
   rotatingThrust: 100
+  mainEngine: {fileID: 8300000, guid: 208ba795fd7509349a6802f716c47d5c, type: 3}
+  deathSound: {fileID: 8300000, guid: c12f5b022c977f344a9d95ed274bb2fe, type: 3}
+  victorySound: {fileID: 8300000, guid: 45d17390ede5ab943b2bb2cf6e9bca99, type: 3}

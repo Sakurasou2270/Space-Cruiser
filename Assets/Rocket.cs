@@ -1,17 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Resources;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
-    Rigidbody rigidBody;
+    [SerializeField] float mainThrust = 500f;
+    [SerializeField] float rotatingThrust = 100f;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] AudioClip deathSound;
+    [SerializeField] AudioClip victorySound;
+
     AudioSource audioSource;
-
-    [SerializeField]
-    float mainThrust = 500f;
-
-    [SerializeField]
-    float rotatingThrust = 100f;
-
+    Rigidbody rigidBody;
+    enum State { Alive, Died, Transending };
+    State state = State.Alive;
 
     // Start is called before the first frame update
     void Start()
@@ -23,41 +25,75 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        switch (collision.gameObject.tag)
+        switch (state)
         {
-            case "Friendly":
-                print("Hit Friendly");
-                break;
-            case "Fuel":
-                print("Hit Fuel");
-                break;
-            case "Finish":
-                print("Finished Level");
-                SceneManager.LoadScene(1);
+            // TODO Stop Sound
+            case State.Alive:
+                RespondToThrustInput();
+                RespondToRotateInput();
                 break;
             default:
-                print("Died");
-                SceneManager.LoadScene(0);
                 break;
         }
     }
 
-    private void Thrust()
+    void OnCollisionEnter(Collision collision)
+    {
+        // Return Means Nothing Below Will Run It Stops At This If Check
+        // AKA Guard Condition
+        if (state != State.Alive)
+        {
+            return;
+        }
+
+        switch (collision.gameObject.tag)
+        {
+            case "Friendly":
+                break;
+            case "Fuel":
+                break;
+            case "Finish":
+                StartSuccessSequence();
+                break;
+            default:
+                StartDeathSequence();
+                break;
+        }
+    }
+
+    private void StartSuccessSequence()
+    {
+        state = State.Transending;
+        audioSource.Stop();
+        audioSource.PlayOneShot(victorySound);
+        // Loading Scene For 1 Second
+        Invoke("LoadNewScene", 1.5f);
+    }
+
+    private void StartDeathSequence()
+    {
+        state = State.Died;
+        audioSource.Stop();
+        audioSource.PlayOneShot(deathSound);
+        Invoke("LoadLastScene", 1.5f);
+    }
+
+    private void LoadNewScene()
+    {
+        // TODO load more than 2 levels
+        SceneManager.LoadScene(1);
+    }
+
+    private void LoadLastScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-
-            if (!audioSource.isPlaying)
-            {
-                audioSource.Play();
-            }
+            ApplyThrust();
         }
         else
         {
@@ -65,7 +101,18 @@ public class Rocket : MonoBehaviour
         }
     }
 
-    private void Rotate()
+    private void ApplyThrust()
+    {
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+
+        if (!audioSource.isPlaying)
+        {
+            // Playing The Selected Audio C
+            audioSource.PlayOneShot(mainEngine);
+        }
+    }
+
+    private void RespondToRotateInput()
     {
         // Control It AKA Taking Away Physics
         rigidBody.freezeRotation = true;
